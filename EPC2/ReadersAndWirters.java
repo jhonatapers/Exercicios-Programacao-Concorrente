@@ -2,23 +2,25 @@ import java.util.concurrent.Semaphore;
 
 public class ReadersAndWirters {
 
-    //Recurso
-    private static Counter resource = new Counter();
 
-    //Quantidade de leitores na sala
-    private static int readersInRoom = 0;
-        
-    //Semafora para exlcusao mutua
-    private static Semaphore mutex = new Semaphore(1);
-    
-    //Semaforo que indica que a sala esta vazia
-    private static Semaphore roomEmpty = new Semaphore(1);
 
     public static void main(String[] args) {
-        withPostponement(20000, 1);
+        withPostponement(2, 20);
     }
 
     private static void withPostponement(Integer NR, Integer NW) {
+
+        //Recurso
+        Counter resource = new Counter();
+
+        //Quantidade de leitores na sala
+        int readersInRoom = 0;
+        
+        //Semafora para exlcusao mutua
+        Semaphore mutex = new Semaphore(1);
+    
+        //Semaforo que indica que a sala esta vazia
+        Semaphore roomEmpty = new Semaphore(1);
 
         //NW = Number of Writers
         for(int i = 0; i < NW; i++) {
@@ -64,7 +66,7 @@ class Reader extends Thread {
 
     Counter r;
     int readersInRoom;
-    private Semaphore mutex;
+    Semaphore mutex;
     Semaphore roomEmpty;
 
 
@@ -84,6 +86,7 @@ class Reader extends Thread {
             catch(InterruptedException ie) { }
 
             readersInRoom++;
+
             if(readersInRoom == 1){
                 try { roomEmpty.acquire(); } 
                 catch(InterruptedException ie) { }
@@ -136,5 +139,3 @@ class Writer extends Thread {
         
     }
 }
-
-
